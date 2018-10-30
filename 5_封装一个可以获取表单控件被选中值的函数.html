@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>封装一个可以获取表单控件被选中值的函数</title>
+</head>
+<body>
+<input type="radio" name="sex" value="女">女
+<input type="radio" name="sex" value="男">男
+<input type="checkbox" name="skill" value="html">html
+<input type="checkbox" name="skill" value="css">css
+<input type="checkbox" name="skill" value="js">js
+<button>button</button>
+<script type="text/javascript">
+window.onload = function(){
+	var aInp = document.getElementsByTagName("input");
+	var oBtn = document.getElementsByTagName("button")[0];
+
+	oBtn.onclick = function(){
+		alert(check(aInp));
+	};
+
+	function check(obj){
+		var arr = [];
+		console.log(obj.length);
+		for(var i=0;i<obj.length;i++){console.log(111);
+			if(obj[i].checked){
+				arr.push(obj[i].value);
+			}
+		}
+		return arr;
+	}
+}
+</script>
+
+</body>
+</html>

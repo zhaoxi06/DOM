@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>动态添加数据到表格中</title>
+<style type="text/css">
+body,div,input,table,thead,tr,td,tbody,a{padding: 0;margin: 0;}
+#info{
+	width: 400px;
+	height: 120px;
+	border:2px solid #ccc;
+	margin: 10px auto;
+	line-height: 30px;
+}
+#tab{
+	width: 100%;
+	margin-top: 20px;
+	text-align: center;
+}
+#tab{
+	border: 2px solid orange;
+}
+th,td{
+	border: 1px solid orange;
+}
+a{
+	color: #9B31FC;
+}
+tr.sel{
+	background: orange;
+	color: white;
+}
+</style>
+</head>
+<body>
+<div id="info">
+	请输入姓名：<input type="text" name="name"><br>
+	请选择性别：<input type="radio" checked="checked" name="sex" value="女">女
+				<input type="radio" name="sex" value="男">男<br>
+	请输入年龄：<input type="text" name="age"><br>
+	<input type="button" name="add" value="添加到表格">
+</div>
+<table id="tab">
+	<thead>
+		<tr>
+			<th><input id="all" type="checkbox" name="all">全选</th>
+			<th>编号</th>
+			<th>姓名</th>
+			<th>性别</th>
+			<th>年龄</th>
+			<th>操作</th>
+		</tr>
+	</thead>
+	<tBody>
+		<!-- <tr class="sel">
+			<td>
+				<input type="checkbox" name="all">
+			</td>
+			<td>1</td>
+			<td>华晨宇</td>
+			<td>28</td>
+			<td>男</td>
+			<td>
+				<a href="#">删除</a>
+				<a href="#">上移</a>
+				<a href="#">下移</a>
+			</td> -->
+		</tr>
+	</tBody>
+</table>
+<input id="delSel" type="button" name="delSel" value="删除">
+<script type="text/javascript">
+window.onload = function(){
+	var oInfo = document.getElementById("info");
+	var aInp = oInfo.getElementsByTagName("input");
+	var oTab = document.getElementById("tab");
+	var oTbody = oTab.tBodies[0];
+	var aTr = oTbody.getElementsByTagName("tr");
+	var aDel = document.getElementsByClassName("del");
+	var aUp = document.getElementsByClassName("up");
+	var aDown = document.getElementsByClassName("down");
+
+	var oAll = document.getElementById("all");
+	var aSel = document.getElementsByClassName("all");
+	var oDelSel = document.getElementById("delSel");
+
+	var data = [
+		{"username":"华晨宇","sex":"男","age":"28"},
+		{"username":"周杰伦","sex":"男","age":"39"},
+		{"username":"张艺兴","sex":"男","age":"27"}
+	];
+	for(var i=0;i<data.length;i++){
+		addInfo(data[i].username,data[i].sex,data[i].age);
+	}
+	numbering();
+
+	//多个一起删除
+	oDelSel.onclick = function(){
+		for(var i=0;i<aSel.length;i++){
+			if(aSel[i].checked){
+				oTbody.removeChild(aSel[i].parentNode.parentNode);
+				i--;
+			}
+		}
+	}
+
+	var selNum = 0;
+	aInp[4].onclick = function(){
+		var oName = aInp[0].value;
+		var oSex = aInp[1].value;
+		if(!aInp[1].checked){
+			oSex = aInp[2].value;
+		}
+		var oAge = aInp[3].value;
+		if(!oName || !oSex){
+			alert("有未填写的内容。");
+			return;
+		}
+		addInfo(oName,oSex,oAge);
+		
+		//添加新元素后重新调整元素编号
+		numbering();
+		//输入框内容清空
+		aInp[0].value = "";
+		aInp[3].value = "";
+	}
+	//删除、上移、下移
+	for(var i=0;i<aDel.length;i++){
+		aDel[i].onclick = function(){
+			var parent = this.parentNode;//td
+			var pp = parent.parentNode;//tr
+			oTbody.removeChild(pp);
+		}
+		aUp[i].onclick = function(){
+			var parent = this.parentNode;
+			var pp = parent.parentNode;
+			var pre = pp.previousElementSibling;
+			oTbody.insertBefore(pp,pre);
+		}
+		aDown[i].onclick = function(){
+			var parent = this.parentNode;
+			var pp = parent.parentNode;
+			var next = pp.nextElementSibling;
+			insetAfter(pp,next);
+		}
+	}
+	//单选
+	for(var i=0;i<aSel.length;i++){
+		aTr[i].index = i;
+		// aSel[i].onclick = function(){
+		aTr[i].onclick = function(){
+			// if(this.checked){
+			if(!aSel[this.index].checked){
+				aSel[this.index].checked = "checked";
+				selNum ++;
+				// this.parentNode.parentNode.setAttribute("class","sel");
+				this.setAttribute("class","sel");
+			}else{
+				aSel[this.index].checked = "";
+				selNum --;
+				// this.parentNode.parentNode.setAttribute("class","");
+				this.setAttribute("class","");
+			}
+			if(selNum==aSel.length){
+				oAll.checked = "checked";
+			}else{
+				oAll.checked = "";
+			}
+		}
+	}
+
+	//全选
+	oAll.onclick = function(){
+		if(this.checked){
+			for(var i=0;i<aSel.length;i++){
+				aSel[i].checked = "checked";
+				aSel[i].parentNode.parentNode.setAttribute("class","sel");
+			}
+			selNum = aSel.length;
+		}else{
+			for(var i=0;i<aSel.length;i++){
+				aSel[i].checked = "";
+				aSel[i].parentNode.parentNode.setAttribute("class","");
+			}
+			selNum = 0;
+		}
+	}
+	//重新编号
+	function numbering(){
+		var aTr = oTbody.getElementsByTagName("tr");
+		for(var i=0;i<aTr.length;i++){
+			aTr[i].children[1].innerHTML = i+1;
+		}
+	}
+	//在现有元素后插入新元素
+	function insetAfter(newElement,targetElement){
+		if(!targetElement) return;
+		var parent = targetElement.parentNode;
+		if(!targetElement.nextElementSibling){
+			parent.appendChild(newElement);
+		}else{
+			parent.insertBefore(newElement,targetElement.nextElementSibling);
+		}
+	}
+	//获取输入框信息后填入表格
+	function addInfo(name,sex,age){
+		var oTr = document.createElement("tr");
+		oTbody.appendChild(oTr);
+		var str = "<td><input class='all' type='checkbox' name='all'></td><td></td>";
+		oTr.innerHTML = str;
+
+		var iName = document.createElement("td");
+		oTr.appendChild(iName);
+		iName.innerHTML = name;
+		var iSex = document.createElement("td");
+		oTr.appendChild(iSex);
+		iSex.innerHTML = sex;
+		var iAge = document.createElement("td");
+		oTr.appendChild(iAge);
+		iAge.innerHTML = age;
+
+		var str2 = "<td><a class='del' href='#'>删除</a><a class='up' href='#'>上移</a><a class='down' href='#'>下移</a></td>";
+		oTr.innerHTML += str2;
+	}
+
+	
+
+}
+</script>
+</body>
+</html>
+

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>留言板</title>
+</head>
+<body>
+<div>
+	<input type="text" name="content">
+	<input type="button" name="message" value=留言>
+	<ul id="list">
+		<!-- <li>放声大哭<a href="#">删除</a></li> -->
+	</ul>
+</div>
+
+<script type="text/javascript">
+window.onload = function () {
+	var aInp = document.getElementsByTagName("input");
+	var oUl = document.getElementById("list");
+	var aLi = oUl.getElementsByTagName("li");
+	var aDel = oUl.getElementsByTagName("a");
+
+	aInp[1].onclick = function(){
+		var val = aInp[0].value;
+		if(!val){
+			alert("请输入留言内容");
+			return;
+		}
+		var li = document.createElement("li");
+		li.innerHTML = val;
+		li.innerHTML += "<a href='#'>删除</a>";
+		oUl.insertBefore(li,oUl.firstElementChild);
+
+		if(aLi.length>8){
+			oUl.removeChild(oUl.lastElementChild);
+		}
+		for(var i=0;i<aDel.length;i++){
+			aDel[i].onclick = function(){
+				oUl.removeChild(this.parentNode);
+			}
+		}
+		aInp[0].value = "";		
+	}
+}
+</script>
+</body>
+</html>
