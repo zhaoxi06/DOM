@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>键盘控制div移动</title>
+<style type="text/css">
+body,div{padding: 0;margin: 0;}
+div{
+	width: 100px;
+	height: 100px;
+	background: orange;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+</style>
+</head>
+<body>
+	<div></div>
+
+<script type="text/javascript">
+window.onload = function () {
+	var oDiv = document.getElementsByTagName("div")[0];
+	var up = false;
+	var right = false;
+	var down = false;
+	var left = false;
+	document.onkeydown = function(ev){
+		var ev = ev || event;
+		//up right down left
+		if(ev.keyCode == 38) up=true;
+		if(ev.keyCode == 39) right=true;
+		if(ev.keyCode == 40) down=true;
+		if(ev.keyCode == 37) left=true;
+		
+	}
+	document.onkeyup = function(ev){
+		var ev = ev || event;
+		//up right down left
+		if(ev.keyCode == 38) up=false;
+		if(ev.keyCode == 39) right=false;
+		if(ev.keyCode == 40) down=false;
+		if(ev.keyCode == 37) left=false;
+		
+	}
+	setInterval(function(){
+		if(up){
+			oDiv.style.top = parseInt(getStyle(oDiv,"top"))-10 + "px";
+		}
+		if(right){
+			oDiv.style.left = parseInt(getStyle(oDiv,"left"))+10+"px"; 
+		}
+		if(down){
+			oDiv.style.top = parseInt(getStyle(oDiv,"top"))+10 + "px";
+		}
+		if(left){
+			oDiv.style.left = parseInt(getStyle(oDiv,"left"))-10+"px"; 
+		}
+	},50)
+
+	function getStyle(elem,attr){
+		return elem.currentStyle ? elem.currentStyle[attr]:getComputedStyle(elem)[attr];
+	}
+}
+</script>
+</body>
+</html>

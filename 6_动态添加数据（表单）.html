@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<title>动态添加数据到表格中</title>
 <style type="text/css">
-body,div,input,table,thead,tr,td,tbody,a{padding: 0;margin: 0;}
+body,form,input,table,thead,tr,td,tbody,a{padding: 0;margin: 0;}
 #info{
 	width: 400px;
 	height: 120px;
@@ -33,13 +33,13 @@ tr.sel{
 </style>
 </head>
 <body>
-<div id="info">
-	请输入姓名：<input type="text" name="name"><br>
+<form id="info">
+	请输入姓名：<input type="text" name="username"><br>
 	请选择性别：<input type="radio" checked="checked" name="sex" value="女">女
 				<input type="radio" name="sex" value="男">男<br>
 	请输入年龄：<input type="text" name="age"><br>
 	<input type="button" name="add" value="添加到表格">
-</div>
+</form>
 <table id="tab">
 	<thead>
 		<tr>
@@ -106,12 +106,14 @@ window.onload = function(){
 
 	var selNum = 0;
 	aInp[4].onclick = function(){
-		var oName = aInp[0].value;
-		var oSex = aInp[1].value;
-		if(!aInp[1].checked){
-			oSex = aInp[2].value;
+		// var oName = aInp[0].value;
+		var oName = oInfo.username.value;
+		// var oSex = aInp[1].value;
+		var oSex = oInfo.sex[0].value
+		if(!oInfo.sex[0].checked){
+			oSex = oInfo.sex[1].value;
 		}
-		var oAge = aInp[3].value;
+		var oAge = oInfo.age.value;
 		if(!oName || !oSex){
 			alert("有未填写的内容。");
 			return;
@@ -121,8 +123,8 @@ window.onload = function(){
 		//添加新元素后重新调整元素编号
 		numbering();
 		//输入框内容清空
-		aInp[0].value = "";
-		aInp[3].value = "";
+		oInfo.username.value = "";
+		oInfo.age.value = "";
 	}
 	operating();
 	function operating(){
@@ -193,7 +195,9 @@ window.onload = function(){
 				selNum = 0;
 			}
 		}
+
 	}
+	
 	
 	//重新编号
 	function numbering(){

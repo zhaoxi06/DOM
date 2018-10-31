@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>登录弹窗</title>
+<style type="text/css">
+body,div,form,button{padding: 0;margin: 0;}
+body{height: 2000px;}
+button{
+	position: absolute;
+	top: 300px;
+}
+#mask{
+	background: rgba(0,0,0,0.3);
+	position: absolute;
+	top: 0;
+	left:0;
+	display: none;
+}
+#form1{
+	width: 300px;
+	height: 240px;
+	padding: 10px;
+	border:5px solid #333;
+	position: absolute;
+	background: white;
+	display: none;
+}
+#close{
+	width: 20px;
+	height: 20px;
+	position: absolute;
+	top: 5px;
+	right: 5px;
+	color: black;
+	text-decoration: none;
+	font-size: 20px;
+}
+</style>
+</head>
+<body>
+	<button>登录</button>
+	<div id="mask"></div>
+	<form id="form1">
+		登录表单内容
+		<a id="close" href="javascript:;">X</a>
+	</form>
+
+<script type="text/javascript">
+window.onload = function(){
+	var oBtn = document.getElementsByTagName("button")[0];
+	var oMask = document.getElementById("mask");
+	var oForm = document.getElementById("form1");
+	var oClose = document.getElementById("close");
+
+	oBtn.onclick = function(){
+		var w = document.documentElement.scrollLeft || document.body.scrollLeft;
+		var h = document.documentElement.scrollTop || document.body.scrollTop;
+
+		oMask.style.width = Math.max( document.documentElement.clientWidth,document.body.offsetWidth) + "px";
+		oMask.style.height = Math.max(document.documentElement.clientHeight,document.body.offsetHeight) + "px";
+
+		oMask.style.display = "block";
+
+		//先设置block，才能获取到offsetWidth
+		oForm.style.display = "block";
+		oForm.style.left = (document.documentElement.clientWidth-oForm.offsetWidth)/2 + w + "px";
+		oForm.style.top = (document.documentElement.clientHeight-oForm.offsetHeight)/2 + h + "px";
+	}
+
+	window.onscroll = function(){
+		if(oForm.style.display=="none") return;
+		var w = document.documentElement.scrollLeft || document.body.scrollLeft;
+		var h = document.documentElement.scrollTop || document.body.scrollTop;
+		oForm.style.left = (document.documentElement.clientWidth-oForm.offsetWidth)/2 + w + "px";
+		oForm.style.top = (document.documentElement.clientHeight-oForm.offsetHeight)/2 + h + "px";
+	}
+
+	window.onresize = function(){
+		if(oMask.style.display=="none") return;
+		oMask.style.width = Math.max( document.documentElement.clientWidth,document.body.offsetWidth) + "px";
+		oMask.style.height = Math.max(document.documentElement.clientHeight,document.body.offsetHeight) + "px";
+
+
+		if(oForm.style.display=="none") return;
+		var w = document.documentElement.scrollLeft || document.body.scrollLeft;
+		var h = document.documentElement.scrollTop || document.body.scrollTop;
+		oForm.style.left = (document.documentElement.clientWidth-oForm.offsetWidth)/2 + w + "px";
+		oForm.style.top = (document.documentElement.clientHeight-oForm.offsetHeight)/2 + h + "px";
+
+	}
+
+	oClose.onclick = function(){
+		oMask.style.display = "none";
+		oForm.style.display = "none";
+	}
+}
+</script>
+</body>
+</html>
