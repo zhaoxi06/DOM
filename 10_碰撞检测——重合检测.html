@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>碰撞检测——重合检测</title>
+<style type="text/css">
+body,img{padding: 0;margin: 0;}
+img{
+	position: absolute;
+}
+#img1{
+	top: 0;
+	left: 0;
+	z-index: 2;
+	opacity: 0.5;
+}
+#img2{
+	top: 200px;
+	left: 500px;
+}
+</style>
+</head>
+<body>
+<img id="img1" src="img/1.jpg">
+<img id="img2" src="img/1.jpg">
+
+<script type="text/javascript">
+window.onload = function(){
+	var oImg1 = document.getElementById("img1");
+	var oImg2 = document.getElementById("img2");
+
+	oImg1.onmousedown = function (ev) {
+		var ev = ev || event;
+		var disX = ev.clientX - this.offsetLeft;
+		var disY = ev.clientY - this.offsetTop;
+
+		if(oImg1.setCapture) oImg1.setCapture();
+
+		document.onmousemove = function(ev){
+			var ev = ev || event;
+			var L = ev.clientX - disX;
+			var T = ev.clientY - disY;
+
+			var L2 = oImg2.offsetLeft;
+			var T2 = oImg2.offsetTop;
+
+			if( L == L2 && T == T2){
+				oImg1.src = "img/2.jpg";
+				oImg2.src = "img/2.jpg";
+			}else{
+				oImg1.src = "img/1.jpg";
+				oImg2.src = "img/1.jpg";
+			}
+
+			oImg1.style.left = L + "px";
+			oImg1.style.top = T + "px";
+		}
+		document.onmouseup = function(){
+			document.onmousemove = document.onmouseup = null;
+			if(oImg1.releaseCapture) oImg1.releaseCapture();
+		}
+		return false;
+	}
+}
+</script>
+</body>
+</html>
